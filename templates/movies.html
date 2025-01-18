@@ -8,22 +8,12 @@
 </head>
 <body class="movies-body">
     <div class="form-container">
-        <h1>Movie List</h1>
-        <form method="post" class="add-movie-form">
-            <input type="text" name="movie" placeholder="Add a movie" required>
-            <button type="submit">Add</button>
-        </form>
-        <ul class="movie-list">
+        <h1>Movies</h1>
+        <ul>
             {% for movie in movies %}
-                <li>
-                    <span>{{ movie }}</span>
-                    <form method="post" action="{{ url_for('delete_movie', movie=movie) }}" style="display:inline;">
-                        <button type="submit">Delete</button>
-                    </form>
-                </li>
+            <li>{{ movie }}</li>
             {% endfor %}
         </ul>
-        <a href="{{ url_for('logout') }}">Logout</a>
     </div>
 </body>
 </html>

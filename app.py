@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
@@ -8,7 +9,10 @@ USERNAME = "admin"
 PASSWORD = "admin"
 
 # In-memory movie list
-movies = []
+movie_list = []
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -19,6 +23,7 @@ def login():
             session['logged_in'] = True
             return redirect(url_for('movies'))
         else:
+            app.logger.error("Invalid username or password")
             return render_template('login.html', error="Invalid username or password")
     return render_template('login.html')
 
@@ -30,14 +35,14 @@ def movies():
     if request.method == 'POST':
         movie_name = request.form['movie']
         if movie_name:
-            movies.append(movie_name)
+            movie_list.append(movie_name)
 
-    return render_template('movies.html', movies=movies)
+    return render_template('movies.html', movies=movie_list)
 
 @app.route('/delete/<movie>', methods=['POST'])
 def delete_movie(movie):
-    if movie in movies:
-        movies.remove(movie)
+    if movie in movie_list:
+        movie_list.remove(movie)
     return redirect(url_for('movies'))
 
 @app.route('/logout')
@@ -45,5 +50,6 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+# filepath: /d:/Tasks/movies_app/app.py
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
