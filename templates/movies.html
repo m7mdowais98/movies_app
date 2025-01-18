@@ -11,9 +11,18 @@
         <h1>Movies</h1>
         <ul>
             {% for movie in movies %}
-            <li>{{ movie }}</li>
+            <li>
+                {{ movie }}
+                <form action="{{ url_for('remove_movie', movie=movie) }}" method="post" style="display:inline;">
+                    <button type="submit">Remove</button>
+                </form>
+            </li>
             {% endfor %}
         </ul>
+        <form action="{{ url_for('movies') }}" method="post">
+            <input type="text" name="new_movie" placeholder="Add a new movie">
+            <button type="submit">Add</button>
+        </form>
     </div>
 </body>
 </html>

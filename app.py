@@ -9,7 +9,7 @@ USERNAME = "admin"
 PASSWORD = "admin"
 
 # In-memory movie list
-movie_list = []
+movie_list = ["Inception", "The Matrix", "Interstellar", "The Dark Knight", "Pulp Fiction"]
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -31,16 +31,16 @@ def login():
 def movies():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-
     if request.method == 'POST':
-        movie_name = request.form['movie']
-        if movie_name:
-            movie_list.append(movie_name)
-
+        new_movie = request.form['new_movie']
+        if new_movie:
+            movie_list.append(new_movie)
     return render_template('movies.html', movies=movie_list)
 
-@app.route('/delete/<movie>', methods=['POST'])
-def delete_movie(movie):
+@app.route('/remove_movie/<movie>', methods=['POST'])
+def remove_movie(movie):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     if movie in movie_list:
         movie_list.remove(movie)
     return redirect(url_for('movies'))
@@ -50,6 +50,5 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# filepath: /d:/Tasks/movies_app/app.py
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
